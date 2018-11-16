@@ -93,16 +93,16 @@ public class RNWifiModule extends ReactContextBaseJavaModule {
 
 	//Method to force wifi usage if the user needs to send requests via wifi
 	//if it does not have internet connection. Useful for IoT applications, when
-	//the app needs to communicate and send requests to a device that have no 
+	//the app needs to communicate and send requests to a device that have no
 	//internet connection via wifi.
 
 	//Receives a boolean to enable forceWifiUsage if true, and disable if false.
-	//Is important to enable only when communicating with the device via wifi 
+	//Is important to enable only when communicating with the device via wifi
 	//and remember to disable it when disconnecting from device.
 	@ReactMethod
 	public void forceWifiUsage(boolean useWifi) {
         boolean canWriteFlag = false;
-		
+
         if (useWifi) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -209,7 +209,7 @@ public class RNWifiModule extends ReactContextBaseJavaModule {
 	public Boolean connectTo(ScanResult result, String password, String ssid) {
 		//Make new configuration
 		WifiConfiguration conf = new WifiConfiguration();
-		
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         conf.SSID = ssid;
     } else {
@@ -217,29 +217,29 @@ public class RNWifiModule extends ReactContextBaseJavaModule {
     }
 
 		String capabilities = result.capabilities;
-		
-		if (capabilities.contains("WPA")  || 
-          capabilities.contains("WPA2") || 
+
+		if (capabilities.contains("WPA")  ||
+          capabilities.contains("WPA2") ||
           capabilities.contains("WPA/WPA2 PSK")) {
 
 	    // appropriate ciper is need to set according to security type used,
 	    // ifcase of not added it will not be able to connect
 	    conf.preSharedKey = "\"" + password + "\"";
-	    
+
 	    conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-	    
+
 	    conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-	    
+
 	    conf.status = WifiConfiguration.Status.ENABLED;
-	    
+
 	    conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
 	    conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
-	    
+
 	    conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-	    
+
 	    conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
 	    conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
-	    
+
 	    conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
 	    conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
 
@@ -361,7 +361,7 @@ public class RNWifiModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void reScanAndLoadWifiList(Callback successCallback, Callback errorCallback) {
 		WifiReceiver receiverWifi = new WifiReceiver(wifi, successCallback, errorCallback);
-   	getReactApplicationContext().getCurrentActivity().registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+   	getCurrentActivity().registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     wifi.startScan();
 	}
 
@@ -399,7 +399,7 @@ public class RNWifiModule extends ReactContextBaseJavaModule {
       public void onReceive(Context c, Intent intent) {
 				// LocalBroadcastManager.getInstance(c).unregisterReceiver(this);
 				c.unregisterReceiver(this);
-				// getReactApplicationContext().getCurrentActivity().registerReceiver
+				// getCurrentActivity().registerReceiver
 				try {
 					List < ScanResult > results = this.wifi.getScanResults();
 					JSONArray wifiArray = new JSONArray();
